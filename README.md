@@ -131,12 +131,15 @@ Language toggle (Bengali/English) and dark/light mode support
 | <img width="1477" alt="image" src="https://github.com/user-attachments/assets/f5f4dd02-f592-4a31-8c69-5cfd97e116d9" /> | <img width="1467" alt="image" src="https://github.com/user-attachments/assets/70ef04a4-1d6d-4b35-8cf7-61ea7009496b" /> |
 
 ### Project 4: Smart City Management Platform
+
 | Login Screen | Choose Dashboard |
 |--------------|------------------|
 | <img width="653" alt="Screenshot 2026-09-02 150559" src="https://github.com/user-attachments/assets/7d0e4174-4020-41f8-bd52-c7be4fa983e8" /> | <img width="1333" alt="Screenshot 2026-09-02 160611" src="https://github.com/user-attachments/assets/ed67ec3e-1d04-4bdd-b6c0-90341526baa8" /> |
+
 | Business Dashboard | Admin Dashboard |
 |--------------------|-----------------|
 | <img width="1486" alt="Screenshot 2026-09-02 150929" src="https://github.com/user-attachments/assets/9f93e8c5-00b4-4016-a63a-7b96ab95b7c9" /> | <img width="1482" alt="Screenshot 2026-09-02 150948" src="https://github.com/user-attachments/assets/ac60c16c-e739-4e47-b818-6b6639b01825" /> |
+
 | Citizen Dashboard |
 |-------------------|
 | <img width="1482" alt="Screenshot 2026-09-02 150848" src="https://github.com/user-attachments/assets/2f29606b-f4f0-487f-8de2-9f9075432709" /> |
