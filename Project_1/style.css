@@ -1,0 +1,440 @@
+/* ---------- Global Reset ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #0c0c1d 0%, #1a1a3e 50%, #2d1b4e 100%);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+}
+
+.generator-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(20px);
+  border-radius: 24px;
+  padding: 36px 32px;
+  box-shadow: 0 25px 80px rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.header h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+.header p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* ---------- Password Display ---------- */
+.password-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  transition: 0.3s ease;
+  margin-bottom: 24px;
+}
+
+.password-display:focus-within {
+  border-color: rgba(108, 92, 231, 0.6);
+}
+
+#passwordOutput {
+  flex: 1;
+  padding: 14px 16px;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  font-family: 'Courier New', monospace;
+  color: #ffffff;
+  letter-spacing: 0.5px;
+  min-height: 54px;
+  cursor: default;
+  
+  /* 🔒 কপি/সিলেক্ট আটকানোর জন্য নতুন কোড */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none;    /* Firefox */
+  -ms-user-select: none;     /* IE10+/Edge */
+  user-select: none;         /* Standard */
+  pointer-events: none;      /* মাউস ক্লিক করলে কিছুই সিলেক্ট হবে না */
+}
+
+#passwordOutput::placeholder {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+#passwordOutput.editable {
+  pointer-events: auto;
+  user-select: auto;
+  cursor: text;
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+}
+
+.password-display button {
+  background: rgba(255, 255, 255, 0.08);
+  border: none;
+  color: #ffffff;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  transition: 0.25s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.password-display button:hover:not(:disabled) {
+  background: rgba(108, 92, 231, 0.4);
+  transform: scale(1.08);
+}
+
+.password-display button:active:not(:disabled) {
+  transform: scale(0.92);
+}
+
+.password-display button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.copy-btn.copied {
+  background: rgba(46, 213, 115, 0.3);
+  color: #2ed573;
+}
+
+.refresh-btn:active:not(:disabled) {
+  transform: rotate(180deg) scale(0.92);
+}
+
+/* ---------- Length Control (সবসময় সক্রিয়) ---------- */
+.control-group {
+  margin-bottom: 20px;
+}
+
+.length-control {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.length-control label {
+  color: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.length-value {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.length-clickable {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 1.2rem;
+  min-width: 32px;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  user-select: none;
+}
+
+.length-clickable:hover {
+  background: rgba(108, 92, 231, 0.3);
+  transform: scale(1.05);
+}
+
+.length-clickable:active {
+  transform: scale(0.95);
+}
+
+#lengthSlider {
+  width: 150px;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+  outline: none;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+#lengthSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(108, 92, 231, 0.4);
+  transition: 0.2s;
+}
+
+#lengthSlider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+#lengthSlider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  cursor: pointer;
+  border: none;
+}
+
+/* ---------- Options ---------- */
+.options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.option:hover:not(.disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.option.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.option input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #6c5ce7;
+  flex-shrink: 0;
+}
+
+.option input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.option input[type="checkbox"]:checked + span {
+  color: #ffffff;
+}
+
+.custom-option {
+  grid-column: 1 / -1;
+  border-color: rgba(108, 92, 231, 0.3);
+  background: rgba(108, 92, 231, 0.05);
+}
+.custom-option:hover {
+  border-color: rgba(108, 92, 231, 0.6);
+}
+.custom-option:has(input:checked) {
+  border-color: #6c5ce7;
+  background: rgba(108, 92, 231, 0.12);
+}
+
+/* ---------- Strength ---------- */
+.strength-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  padding: 10px 16px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 12px;
+}
+
+.strength-label {
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 500;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.4s ease, background 0.4s ease;
+}
+
+.strength-text {
+  font-weight: 700;
+  font-size: 0.85rem;
+  min-width: 56px;
+  text-align: right;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ---------- Generate Button ---------- */
+.generate-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #6c5ce7 0%, #a29bfe 100%);
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-family: inherit;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 25px rgba(108, 92, 231, 0.3);
+}
+
+.generate-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 40px rgba(108, 92, 231, 0.5);
+}
+
+.generate-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.generate-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ---------- Footer ---------- */
+.footer-note {
+  text-align: center;
+  margin-top: 20px;
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 0.8rem;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 480px) {
+  .generator-card {
+    padding: 24px 18px;
+  }
+
+  .header h1 {
+    font-size: 1.4rem;
+  }
+
+  .options-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  #passwordOutput {
+    font-size: 0.9rem;
+    padding: 10px 12px;
+    min-height: 44px;
+  }
+
+  .password-display button {
+    width: 40px;
+    height: 40px;
+    font-size: 1.1rem;
+  }
+
+  #lengthSlider {
+    width: 100px;
+  }
+
+  .strength-container {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 380px) {
+  .length-control {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .length-value {
+    justify-content: space-between;
+  }
+
+  #lengthSlider {
+    width: 100%;
+  }
+}
+
+

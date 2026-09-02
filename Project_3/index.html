@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wanderlust - Travel Website (BDT)</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="logo">🌍 Wanderlust</div>
+    <div class="nav-links" id="navLinks">
+      <a href="#destinations">Destinations</a>
+      <a href="#packages">Packages</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#gallery">Gallery</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Explore The World With Us</h1>
+    <p>Find your next adventure today!</p>
+    <button class="btn-primary" onclick="document.getElementById('destinations').scrollIntoView()">Explore Destinations</button>
+  </section>
+
+  <!-- Destinations -->
+  <section id="destinations" class="section">
+    <h2 class="section-title">Popular Destinations</h2>
+    <div class="destinations-grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1502602898657-3e91760cbb34?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Paris">
+        <div class="card-content">
+          <h3>Paris, France</h3>
+          <p>Experience the city of lights, art, and romance.</p>
+          <div class="price-tag">৳ 1,45,000 / person</div>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1537996194471-e657df975ab4?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Bali">
+        <div class="card-content">
+          <h3>Bali, Indonesia</h3>
+          <p>Relax on pristine beaches and explore lush jungles.</p>
+          <div class="price-tag">৳ 1,15,000 / person</div>
+        </div>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1533587851505-d119e13fa0d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Maldives">
+        <div class="card-content">
+          <h3>Maldives</h3>
+          <p>Luxury overwater villas and crystal clear waters.</p>
+          <div class="price-tag">৳ 3,00,000 / person</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Packages -->
+  <section id="packages" class="section">
+    <h2 class="section-title">Travel Packages</h2>
+    <div class="packages-grid">
+      <div class="package-card">
+        <h3>Adventure Pack</h3>
+        <ul>
+          <li>Mountain Trekking</li>
+          <li>Rafting & Kayaking</li>
+          <li>Camping Gear</li>
+          <li>6 Days / 5 Nights</li>
+        </ul>
+        <button class="btn-package">Book Now</button>
+      </div>
+      <div class="package-card">
+        <h3>Family Fun</h3>
+        <ul>
+          <li>Theme Parks</li>
+          <li>Kids Activities</li>
+          <li>Family Hotel Deals</li>
+          <li>7 Days / 6 Nights</li>
+        </ul>
+        <button class="btn-package">Book Now</button>
+      </div>
+      <div class="package-card">
+        <h3>Luxury Escape</h3>
+        <ul>
+          <li>Private Villas</li>
+          <li>Fine Dining</li>
+          <li>Personal Guide</li>
+          <li>10 Days / 9 Nights</li>
+        </ul>
+        <button class="btn-package">Book Now</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="section">
+    <h2 class="section-title">Pricing Plans (BDT)</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Basic</h3>
+        <div class="price">৳ 5,999/mo</div>
+        <ul>
+          <li>Standard Destinations</li>
+          <li>Group Tours</li>
+          <li>Email Support</li>
+        </ul>
+        <button class="btn-pricing">Choose Basic</button>
+      </div>
+      <div class="pricing-card featured">
+        <h3>Pro</h3>
+        <div class="price">৳ 11,999/mo</div>
+        <ul>
+          <li>All Destinations</li>
+          <li>Private Tours</li>
+          <li>24/7 Support</li>
+          <li>Free Cancellation</li>
+        </ul>
+        <button class="btn-pricing">Choose Pro</button>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="price">৳ 24,999/mo</div>
+        <ul>
+          <li>Custom Itineraries</li>
+          <li>VIP Airport Transfer</li>
+          <li>Dedicated Agent</li>
+        </ul>
+        <button class="btn-pricing">Choose Enterprise</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery -->
+  <section id="gallery" class="section">
+    <h2 class="section-title">Photo Gallery</h2>
+    <div class="gallery-grid">
+      <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Road Trip">
+      <img src="https://images.unsplash.com/photo-1530521954074-e64f6810b32d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Santorini">
+      <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Italy">
+      <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Venice">
+      <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Resort">
+      <img src="https://images.unsplash.com/photo-1488085061387-422e29b40080?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80" alt="Travel">
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="section">
+    <h2 class="section-title">Contact Us</h2>
+    <div class="contact-container">
+      <div class="contact-info">
+        <h3>Get in touch</h3>
+        <p>📍 123 Travel Street, Dhaka, Bangladesh</p>
+        <p>📞 +880 1234-567890</p>
+        <p>✉️ info@wanderlust.com</p>
+        <p>🕐 Mon - Sat: 9:00 AM - 6:00 PM</p>
+      </div>
+      <div class="contact-form">
+        <h3>Send us a message</h3>
+        <form onsubmit="submitForm(event)">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" required placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" required placeholder="Enter your email">
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea required placeholder="Write your message here..."></textarea>
+          </div>
+          <button type="submit" class="btn-primary" style="width: 100%;">Send Message</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Wanderlust Travel. All rights reserved. | Designed with ❤️</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

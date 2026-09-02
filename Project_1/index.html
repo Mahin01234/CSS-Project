@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Password Generator</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <div class="generator-card">
+      <!-- Header -->
+      <div class="header">
+        <h1>Password Generator</h1>
+        <p>Create strong, secure passwords instantly</p>
+      </div>
+
+      <!-- Password Display -->
+      <div class="password-display">
+        <input type="text" id="passwordOutput" readonly placeholder="Your password will appear here" />
+        <button class="copy-btn" id="copyBtn" title="Copy to clipboard">📋</button>
+        <button class="refresh-btn" id="refreshBtn" title="Generate new password">🔄</button>
+      </div>
+
+      <!-- Password Length -->
+      <div class="control-group">
+        <div class="length-control">
+          <label for="lengthSlider">Password Length</label>
+          <div class="length-value">
+            <span id="lengthDisplay" class="length-clickable">16</span>
+            <input type="range" id="lengthSlider" min="4" max="32" value="16" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Options -->
+      <div class="options-grid">
+        <label class="option">
+          <input type="checkbox" id="uppercase" checked />
+          <span>Uppercase (A–Z)</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" id="lowercase" checked />
+          <span>Lowercase (a–z)</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" id="numbers" checked />
+          <span>Numbers (0–9)</span>
+        </label>
+        <label class="option">
+          <input type="checkbox" id="symbols" checked />
+          <span>Symbols (!@#$...)</span>
+        </label>
+        <label class="option custom-option">
+          <input type="checkbox" id="customPassword" />
+          <span>I want to type my own password</span>
+        </label>
+      </div>
+
+      <!-- Strength -->
+      <div class="strength-container">
+        <span class="strength-label">Strength:</span>
+        <div class="strength-bar">
+          <div class="strength-fill" id="strengthFill"></div>
+        </div>
+        <span class="strength-text" id="strengthText">Strong</span>
+      </div>
+
+      <!-- Generate Button -->
+      <button class="generate-btn" id="generateBtn">Generate Password</button>
+
+      <!-- Footer -->
+      <div class="footer-note">
+        <span>Your password is never stored or transmitted</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Smart City Management Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ─── AUTH OVERLAY ─── -->
+    <div id="authOverlay">
+        <div class="auth-container" id="authContainer">
+            <div class="brand">
+                <i class="fas fa-city"></i>
+                <h1 data-i18n="Smart City">স্মার্ট সিটি</h1>
+                <p data-i18n="Management Platform">ম্যানেজমেন্ট প্ল্যাটফর্ম</p>
+            </div>
+            <div class="error-msg" id="authError"></div>
+
+            <!-- Login -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label data-i18n="Email">ইমেইল</label>
+                    <input type="email" id="loginEmail"  />
+                </div>
+                <div class="form-group">
+                    <label data-i18n="Password">পাসওয়ার্ড</label>
+                    <input type="password" id="loginPassword"  />
+                    <span class="password-toggle" onclick="togglePasswordVisibility('loginPassword', this)"><i class="fas fa-eye"></i></span>
+                </div>
+                <button class="btn-primary" onclick="handleLogin()"><i class="fas fa-sign-in-alt"></i> <span data-i18n="Login">লগইন</span></button>
+                <div class="auth-switch">
+                    <span data-i18n="Don't have an account?">অ্যাকাউন্ট নেই?</span>
+                    <a onclick="showRegister()"><span data-i18n="Register now">এখনই নিবন্ধন করুন</span></a>
+                </div>
+            </div>
+
+            <!-- Register -->
+            <div id="registerForm" style="display:none;">
+                <div class="form-group">
+                    <label data-i18n="Full Name">পুরো নাম</label>
+                    <input type="text" id="regName"  />
+                </div>
+                <div class="form-group">
+                    <label data-i18n="Email">ইমেইল</label>
+                    <input type="email" id="regEmail"  />
+                </div>
+                <div class="form-group">
+                    <label data-i18n="Password">পাসওয়ার্ড</label>
+                    <input type="password" id="regPassword"  />
+                    <span class="password-toggle" onclick="togglePasswordVisibility('regPassword', this)"><i class="fas fa-eye"></i></span>
+                </div>
+                <div class="form-group">
+                    <label data-i18n="Confirm Password">পাসওয়ার্ড নিশ্চিত করুন</label>
+                    <input type="password" id="regConfirm"  />
+                    <span class="password-toggle" onclick="togglePasswordVisibility('regConfirm', this)"><i class="fas fa-eye"></i></span>
+                </div>
+                <button class="btn-primary" onclick="handleRegister()"><i class="fas fa-user-plus"></i> <span data-i18n="Register">নিবন্ধন</span></button>
+                <div class="auth-switch">
+                    <span data-i18n="Already have an account?">ইতিমধ্যে অ্যাকাউন্ট আছে?</span>
+                    <a onclick="showLogin()"><span data-i18n="Login">লগইন</span></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── ROLE SELECTION SCREEN ─── -->
+    <div id="roleSelection">
+        <div class="role-selection-container">
+            <div class="role-selection-header">
+                <i class="fas fa-city"></i>
+                <h1 data-i18n="Choose Dashboard">Choose Dashboard</h1>
+                <!-- <p data-i18n="Select a role to continue">Select a role to continue</p> -->
+                <button class="lang-toggle-btn" id="langToggleRole">
+                    <i class="fas fa-globe"></i> <span id="langLabelRole">বাং</span>
+                </button>
+                <button class="logout-btn-role" onclick="handleLogout()">
+                    <i class="fas fa-sign-out-alt"></i> <span data-i18n="Logout">লগআউট</span>
+                </button>
+                <!-- ✅ ডার্ক/লাইট মোড বাটন -->
+                <button class="theme-toggle-btn" id="themeToggleRole"><i class="fas fa-moon"></i> <span id="themeLabelRole">Dark Mode</span></button>
+            </div>
+            <div class="role-cards">
+                <button class="role-card" onclick="selectDashboardRole('citizen')">
+                    <div class="role-card-icon"><i class="fas fa-user"></i></div>
+                    <h2 data-i18n="Citizen">নাগরিক</h2>
+                    <p data-i18n="Citizen Dashboard">Citizen Dashboard</p>
+                </button>
+                <button class="role-card" onclick="selectDashboardRole('business')">
+                    <div class="role-card-icon"><i class="fas fa-store"></i></div>
+                    <h2 data-i18n="Business">ব্যবসা</h2>
+                    <p data-i18n="Business Dashboard">Business Dashboard</p>
+                </button>
+                <button class="role-card" onclick="selectDashboardRole('admin')">
+                    <div class="role-card-icon"><i class="fas fa-user-shield"></i></div>
+                    <h2 data-i18n="Admin">অ্যাডমিন</h2>
+                    <p data-i18n="Admin Dashboard">Admin Dashboard</p>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ─── MAIN APP ─── -->
+    <div id="appContainer">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <i class="fas fa-city"></i>
+                <div>
+                    <span data-i18n="Smart City">স্মার্ট সিটি</span>
+                    <small data-i18n="Management Platform">ম্যানেজমেন্ট প্ল্যাটফর্ম</small>
+                </div>
+            </div>
+            <nav class="sidebar-nav" id="sidebarNav">
+                <!-- Citizen -->
+                <div class="nav-label" data-role="citizen">👤 <span data-i18n="Citizen Portal">নাগরিক পোর্টাল</span></div>
+                <div class="nav-item active" data-module="citizen-dashboard" data-role="citizen"><i class="fas fa-th-large"></i> <span data-i18n="Dashboard">ড্যাশবোর্ড</span></div>
+                <div class="nav-item" data-module="healthcare" data-role="citizen"><i class="fas fa-hospital"></i> <span data-i18n="Healthcare">স্বাস্থ্যসেবা</span></div>
+                <div class="nav-item" data-module="education" data-role="citizen"><i class="fas fa-graduation-cap"></i> <span data-i18n="Education">শিক্ষা</span></div>
+                <div class="nav-item" data-module="transport" data-role="citizen"><i class="fas fa-bus"></i> <span data-i18n="Transportation">পরিবহন</span></div>
+                <div class="nav-item" data-module="realestate" data-role="citizen"><i class="fas fa-home"></i> <span data-i18n="Real Estate">রিয়েল এস্টেট</span></div>
+                <!-- <div class="nav-item" data-module="ecommerce" data-role="citizen"><i class="fas fa-shopping-bag"></i> <span data-i18n="E-Commerce">ই-কমার্স</span></div> -->
+                <div class="nav-item" data-module="courier" data-role="citizen"><i class="fas fa-shipping-fast"></i> <span data-i18n="Courier">কুরিয়ার</span></div>
+                <div class="nav-item" data-module="payments" data-role="citizen"><i class="fas fa-credit-card"></i> <span data-i18n="Payments">পেমেন্ট</span></div>
+                <div class="nav-item" data-module="finance" data-role="citizen"><i class="fas fa-wallet"></i> <span data-i18n="Finance">আর্থিক</span></div>
+                <div class="nav-item" data-module="parking" data-role="citizen"><i class="fas fa-parking"></i> <span data-i18n="Parking">পার্কিং</span></div>
+                <div class="nav-item" data-module="emergency" data-role="citizen"><i class="fas fa-ambulance"></i> <span data-i18n="Emergency">জরুরি</span></div>
+                <div class="nav-item" data-module="complaints" data-role="citizen"><i class="fas fa-exclamation-triangle"></i> <span data-i18n="Complaints">অভিযোগ</span></div>
+                <div class="nav-item" data-module="booking" data-role="citizen"><i class="fas fa-calendar-check"></i> <span data-i18n="Booking">বুকিং</span></div>
+                <div class="nav-item" data-module="documents" data-role="citizen"><i class="fas fa-file-alt"></i> <span data-i18n="Documents">নথিপত্র</span></div>
+                <div class="nav-item" data-module="notifications" data-role="citizen"><i class="fas fa-bell"></i> <span data-i18n="Notifications">বিজ্ঞপ্তি</span></div>
+
+                <!-- Business -->
+                <div class="nav-label" data-role="business">🏢 <span data-i18n="Business Portal">ব্যবসা পোর্টাল</span></div>
+                <div class="nav-item" data-module="business-dashboard" data-role="business"><i class="fas fa-th-large"></i> <span data-i18n="Dashboard">ড্যাশবোর্ড</span></div>
+                <div class="nav-item" data-module="business-registration" data-role="business"><i class="fas fa-clipboard-list"></i> <span data-i18n="Registration">নিবন্ধন</span></div>
+                <div class="nav-item" data-module="business-profile" data-role="business"><i class="fas fa-store"></i> <span data-i18n="Profile">প্রোফাইল</span></div>
+                <div class="nav-item" data-module="products" data-role="business"><i class="fas fa-boxes"></i> <span data-i18n="Products">পণ্য</span></div>
+                <div class="nav-item" data-module="business-orders" data-role="business"><i class="fas fa-truck"></i> <span data-i18n="Orders">অর্ডার</span></div>
+                <div class="nav-item" data-module="business-booking" data-role="business"><i class="fas fa-calendar-check"></i> <span data-i18n="Booking">বুকিং</span></div>
+                <div class="nav-item" data-module="business-payments" data-role="business"><i class="fas fa-credit-card"></i> <span data-i18n="Payments">পেমেন্ট</span></div>
+                <div class="nav-item" data-module="delivery" data-role="business"><i class="fas fa-truck"></i> <span data-i18n="Delivery">ডেলিভারি</span></div>
+                <div class="nav-item" data-module="customers" data-role="business"><i class="fas fa-users"></i> <span data-i18n="Customers">গ্রাহক</span></div>
+                <div class="nav-item" data-module="sales-analytics" data-role="business"><i class="fas fa-chart-line"></i> <span data-i18n="Sales Analytics">বিক্রয় বিশ্লেষণ</span></div>
+                <div class="nav-item" data-module="business-notifications" data-role="business"><i class="fas fa-bell"></i> <span data-i18n="Notifications">বিজ্ঞপ্তি</span></div>
+
+                <!-- Admin -->
+                <div class="nav-label" data-role="admin">👨‍💼 <span data-i18n="Admin Portal">অ্যাডমিন পোর্টাল</span></div>
+                <div class="nav-item" data-module="admin-dashboard" data-role="admin"><i class="fas fa-th-large"></i> <span data-i18n="Dashboard">ড্যাশবোর্ড</span></div>
+                <div class="nav-item" data-module="users" data-role="admin"><i class="fas fa-users-cog"></i> <span data-i18n="User Management">ব্যবহারকারী ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="businesses" data-role="admin"><i class="fas fa-store-alt"></i> <span data-i18n="Business Management">ব্যবসা ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-healthcare" data-role="admin"><i class="fas fa-hospital"></i> <span data-i18n="Healthcare Management">স্বাস্থ্যসেবা ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-education" data-role="admin"><i class="fas fa-graduation-cap"></i> <span data-i18n="Education Management">শিক্ষা ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-transport" data-role="admin"><i class="fas fa-bus"></i> <span data-i18n="Transport Management">পরিবহন ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-property" data-role="admin"><i class="fas fa-home"></i> <span data-i18n="Property Management">সম্পত্তি ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-ecommerce" data-role="admin"><i class="fas fa-shopping-bag"></i> <span data-i18n="E-Commerce Management">ই-কমার্স ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-courier" data-role="admin"><i class="fas fa-shipping-fast"></i> <span data-i18n="Courier Management">কুরিয়ার ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-payments" data-role="admin"><i class="fas fa-credit-card"></i> <span data-i18n="Payment Management">পেমেন্ট ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-parking" data-role="admin"><i class="fas fa-parking"></i> <span data-i18n="Parking Management">পার্কিং ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-emergency" data-role="admin"><i class="fas fa-ambulance"></i> <span data-i18n="Emergency Management">জরুরি ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-complaints" data-role="admin"><i class="fas fa-exclamation-triangle"></i> <span data-i18n="Complaint Management">অভিযোগ ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-booking" data-role="admin"><i class="fas fa-calendar-check"></i> <span data-i18n="Booking Management">বুকিং ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="analytics" data-role="admin"><i class="fas fa-chart-pie"></i> <span data-i18n="Analytics">বিশ্লেষণ</span></div>
+                <div class="nav-item" data-module="admin-notifications" data-role="admin"><i class="fas fa-bell"></i> <span data-i18n="Notifications">বিজ্ঞপ্তি</span></div>
+                <div class="nav-item" data-module="admin-chat" data-role="admin"><i class="fas fa-comments"></i> <span data-i18n="Chat Management">চ্যাট ব্যবস্থাপনা</span></div>
+                <div class="nav-item" data-module="admin-documents" data-role="admin"><i class="fas fa-file-alt"></i> <span data-i18n="Document Management">নথি ব্যবস্থাপনা</span></div>
+                <!-- <div class="nav-item" data-module="settings" data-role="admin"><i class="fas fa-cog"></i> <span data-i18n="System Settings">সিস্টেম সেটিংস</span></div> -->
+            </nav>
+        </aside>
+
+        <main class="main" id="mainContent">
+            <!-- Topbar -->
+            <div class="topbar">
+                <div class="topbar-left">
+                    <button class="hamburger" id="hamburgerBtn"><i class="fas fa-bars"></i></button>
+                    <button class="dashboard-back-btn" onclick="showRoleSelection()"><i class="fas fa-arrow-left"></i> <span data-i18n="Back">Back</span></button>
+                    <h1 id="pageTitle">ড্যাশবোর্ড <small>ওভারভিউ</small></h1>
+                </div>
+            </div>
+
+            <!-- ======================== CITIZEN PANELS ======================== -->
+            <div class="panel active" id="panel-citizen-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-label" data-i18n="Citizens">নাগরিক</div><div class="stat-value">24,580</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 3.2%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-hospital"></i></div><div class="stat-label" data-i18n="Hospitals">হাসপাতাল</div><div class="stat-value">42</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 2</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-bus"></i></div><div class="stat-label" data-i18n="Transport Routes">পরিবহন রুট</div><div class="stat-value">128</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 5%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-label" data-i18n="Complaints">অভিযোগ</div><div class="stat-value">856</div><div class="stat-change down"><i class="fas fa-arrow-down"></i> 12%</div></div>
+                </div>
+                <div class="grid-2">
+                    <div class="card"><div class="card-title"><span data-i18n="Recent Complaints">সাম্প্রতিক অভিযোগ</span> <span class="text-muted" style="font-weight:400;font-size:13px;" data-i18n="Last 5">শেষ ৫টি</span></div><div id="citizenRecentComplaints"></div></div>
+                    <div class="card"><div class="card-title"><span data-i18n="Upcoming Appointments">আসন্ন অ্যাপয়েন্টমেন্ট</span> <span class="text-muted" style="font-weight:400;font-size:13px;" data-i18n="Next 3">পরবর্তী ৩টি</span></div><div id="citizenAppointments"></div></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-healthcare">
+                <div class="panel-header"><h2 data-i18n="Healthcare">স্বাস্থ্যসেবা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('healthcare')"><i class="fas fa-plus"></i> <span data-i18n="Book Appointment">অ্যাপয়েন্টমেন্ট বুক করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Hospital">হাসপাতাল</th><th data-i18n="Doctor">ডাক্তার</th><th data-i18n="Speciality">বিশেষত্ব</th><th data-i18n="Available">উপলব্ধ</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="healthcareTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-education">
+                <div class="panel-header"><h2 data-i18n="Education">শিক্ষা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('education')"><i class="fas fa-plus"></i> <span data-i18n="Apply Online">অনলাইনে আবেদন করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Institution">প্রতিষ্ঠান</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Courses">কোর্স</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="educationTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-transport">
+                <div class="panel-header"><h2 data-i18n="Transportation">পরিবহন</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('transport')"><i class="fas fa-plus"></i> <span data-i18n="Book Ride">যাত্রা বুক করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Route">রুট</th><th data-i18n="Type">ধরন</th><th data-i18n="Departure">প্রস্থান</th><th data-i18n="Arrival">আগমন</th><th data-i18n="Fare">ভাড়া</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="transportTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-realestate">
+                <div class="panel-header"><h2 data-i18n="Real Estate">রিয়েল এস্টেট</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('realestate')"><i class="fas fa-plus"></i> <span data-i18n="List Property">সম্পত্তি তালিকাভুক্ত করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Property">সম্পত্তি</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Price">মূল্য</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="realestateTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-ecommerce">
+                <div class="panel-header"><h2 data-i18n="E-Commerce">ই-কমার্স</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('ecommerce')"><i class="fas fa-plus"></i> <span data-i18n="Add Product">পণ্য যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Product">পণ্য</th><th data-i18n="Category">ক্যাটাগরি</th><th data-i18n="Price">মূল্য</th><th data-i18n="Stock">স্টক</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="ecommerceTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-courier">
+                <div class="panel-header"><h2 data-i18n="Courier">কুরিয়ার</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('courier')"><i class="fas fa-plus"></i> <span data-i18n="Book Parcel">পার্সেল বুক করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Parcel ID">পার্সেল আইডি</th><th data-i18n="Sender">প্রেরক</th><th data-i18n="Receiver">প্রাপক</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="courierTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-payments">
+                <div class="panel-header"><h2 data-i18n="Payments">পেমেন্ট</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('payment')"><i class="fas fa-plus"></i> <span data-i18n="Make Payment">পেমেন্ট করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Bill #">বিল নং</th><th data-i18n="Type">ধরন</th><th data-i18n="Amount">পরিমাণ</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="paymentTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-finance">
+                <div class="panel-header">
+                    <h2 data-i18n="Finance">আর্থিক সেবা</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="openModal('finance-wallet')"><i class="fas fa-wallet"></i> <span data-i18n="Update Wallet">ওয়ালেট আপডেট করুন</span></button>
+                        <button class="btn btn-success" onclick="openModal('finance-transaction')"><i class="fas fa-plus"></i> <span data-i18n="Add Transaction">লেনদেন যোগ করুন</span></button>
+                        <button class="btn btn-danger" onclick="clearAllTransactions()"><i class="fas fa-trash"></i> <span data-i18n="Clear All">সব লেনদেন মুছুন</span></button>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="card">
+                        <div class="card-title" data-i18n="Wallet">ওয়ালেট</div>
+                        <div class="stat-value" style="font-size:32px;" id="walletBalance">৳0</div>
+                        <span class="text-muted" data-i18n="Balance">বর্তমান ব্যালেন্স</span>
+                    </div>
+                    <div class="card">
+                        <div class="card-title" data-i18n="Recent Transactions">সাম্প্রতিক লেনদেন</div>
+                        <div id="financeTransactions"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-parking">
+                <div class="panel-header"><h2 data-i18n="Parking">পার্কিং</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('parking')"><i class="fas fa-plus"></i> <span data-i18n="Book Slot">স্লট বুক করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Location">অবস্থান</th><th data-i18n="Slot">স্লট</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Fee">ফি</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="parkingTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-emergency">
+                <div class="panel-header"><h2 data-i18n="Emergency Services">জরুরি সেবা</h2><div class="panel-actions"><button class="btn btn-danger" onclick="openModal('emergency')"><i class="fas fa-ambulance"></i> <span data-i18n="Request Ambulance">অ্যাম্বুলেন্স অনুরোধ করুন</span></button></div></div>
+                <div class="grid-3">
+                    <div class="card"><div class="card-title">🚑 <span data-i18n="Ambulance">অ্যাম্বুলেন্স</span></div><p class="text-muted">24/7</p><button class="btn btn-danger btn-sm" style="margin-top:10px;" onclick="alert(t('Ambulance requested!'))"><span data-i18n="Call Now">এখনই কল করুন</span></button></div>
+                    <div class="card"><div class="card-title">🚓 <span data-i18n="Police">পুলিশ</span></div><p class="text-muted"><span data-i18n="Report an incident">ঘটনা রিপোর্ট করুন</span></p><button class="btn btn-primary btn-sm" style="margin-top:10px;" onclick="alert(t('Police notified!'))"><span data-i18n="Report">রিপোর্ট</span></button></div>
+                    <div class="card"><div class="card-title">🚒 <span data-i18n="Fire Service">ফায়ার সার্ভিস</span></div><p class="text-muted"><span data-i18n="Fire & rescue">অগ্নি ও উদ্ধার</span></p><button class="btn btn-danger btn-sm" style="margin-top:10px;" onclick="alert(t('Fire service called!'))"><span data-i18n="Call">কল করুন</span></button></div>
+                </div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Emergency #">জরুরি নং</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="emergencyTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-complaints">
+                <div class="panel-header"><h2 data-i18n="Complaints">অভিযোগ</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('complaint')"><i class="fas fa-plus"></i> <span data-i18n="New Complaint">নতুন অভিযোগ</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th data-i18n="Type">ধরন</th><th data-i18n="Description">বিবরণ</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="complaintTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-booking">
+                <div class="panel-header"><h2 data-i18n="Booking">বুকিং</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('booking')"><i class="fas fa-plus"></i> <span data-i18n="New Booking">নতুন বুকিং</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Booking #">বুকিং নং</th><th data-i18n="Service">সেবা</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="bookingTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-documents">
+                <div class="panel-header"><h2 data-i18n="Documents">নথিপত্র</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('document')"><i class="fas fa-plus"></i> <span data-i18n="Upload Document">নথি আপলোড করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Document">নথি</th><th data-i18n="Type">ধরন</th><th data-i18n="Uploaded">আপলোড</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="documentTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-notifications">
+                <div class="panel-header"><h2 data-i18n="Notifications">বিজ্ঞপ্তি</h2><div class="panel-actions"><button class="btn btn-outline" onclick="alert(t('All marked as read!'))"><i class="fas fa-check-double"></i> <span data-i18n="Mark all read">সব পঠিত চিহ্নিত করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Time">সময়</th><th data-i18n="Message">বার্তা</th><th data-i18n="Type">ধরন</th><th data-i18n="Status">অবস্থা</th></tr></thead><tbody id="notificationTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-map">
+                <div class="panel-header"><h2 data-i18n="Smart Map">স্মার্ট ম্যাপ</h2></div>
+                <div class="card" style="height:400px;display:flex;align-items:center;justify-content:center;background:var(--bg-table-even);color:var(--text-muted);">
+                    <div><i class="fas fa-map-marked-alt" style="font-size:48px;display:block;margin-bottom:10px;"></i> <span data-i18n="Interactive Map">ইন্টারঅ্যাকটিভ ম্যাপ</span></div>
+                </div>
+            </div>
+
+            <!-- ======================== BUSINESS PANELS ======================== -->
+            <div class="panel" id="panel-business-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-store"></i></div><div class="stat-label" data-i18n="Revenue">রাজস্ব</div><div class="stat-value">$42.8K</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 8.5%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-shopping-bag"></i></div><div class="stat-label" data-i18n="Orders">অর্ডার</div><div class="stat-value">312</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 12%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-label" data-i18n="Customers">গ্রাহক</div><div class="stat-value">1,240</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 5.1%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-truck"></i></div><div class="stat-label" data-i18n="Deliveries">ডেলিভারি</div><div class="stat-value">98</div><div class="stat-change down"><i class="fas fa-arrow-down"></i> 2%</div></div>
+                </div>
+                <div class="grid-2">
+                    <div class="card"><div class="card-title" data-i18n="Recent Orders">সাম্প্রতিক অর্ডার</div><div id="businessRecentOrders"></div></div>
+                    <div class="card"><div class="card-title" data-i18n="Top Products">শীর্ষ পণ্য</div><div id="businessTopProducts"></div></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-business-registration">
+                <div class="panel-header"><h2 data-i18n="Registration">ব্যবসা নিবন্ধন</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('business')"><i class="fas fa-plus"></i> <span data-i18n="Register Business">ব্যবসা নিবন্ধন করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Business Name">ব্যবসার নাম</th><th data-i18n="Owner">মালিক</th><th data-i18n="Type">ধরন</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="businessRegTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-business-profile">
+                <div class="panel-header"><h2 data-i18n="Profile">ব্যবসা প্রোফাইল</h2></div>
+                <div class="card" style="max-width:500px;">
+                    <div class="form-group"><label data-i18n="Business Name">ব্যবসার নাম</label><input type="text" value="Tech Solutions" /></div>
+                    <div class="form-group"><label data-i18n="Owner">মালিক</label><input type="text" value="Mr. Karim" /></div>
+                    <div class="form-group"><label data-i18n="Type">ধরন</label><input type="text" value="IT" /></div>
+                    <div class="form-group"><label data-i18n="Email">ইমেইল</label><input type="email" value="info@techsolutions.com" /></div>
+                    <button class="btn btn-primary"><span data-i18n="Update Profile">প্রোফাইল আপডেট করুন</span></button>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-products">
+                <div class="panel-header"><h2 data-i18n="Products">পণ্য</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('product')"><i class="fas fa-plus"></i> <span data-i18n="Add Product">পণ্য যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Product">পণ্য</th><th data-i18n="Price">মূল্য</th><th data-i18n="Stock">স্টক</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="productTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-business-orders">
+                <div class="panel-header">
+                    <h2 data-i18n="Orders">অর্ডার</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="openModal('businessOrder')"><i class="fas fa-plus"></i> <span data-i18n="Add Order">অর্ডার যোগ করুন</span></button>
+                    </div>
+                </div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th data-i18n="Customer">গ্রাহক</th><th data-i18n="Total">মোট</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="businessOrderTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-business-booking">
+                <div class="panel-header"><h2 data-i18n="Booking">বুকিং</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('businessBooking')"><i class="fas fa-plus"></i> <span data-i18n="New Booking">নতুন বুকিং</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th data-i18n="Service">সেবা</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="businessBookingTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-business-payments">
+                <div class="panel-header">
+                    <h2 data-i18n="Payments">পেমেন্ট</h2>
+                    <div class="panel-actions">
+                        <button class="btn btn-primary" onclick="openModal('businessPayment')"><i class="fas fa-plus"></i> <span data-i18n="Add Payment">পেমেন্ট যোগ করুন</span></button>
+                    </div>
+                </div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Invoice">ইনভয়েস</th><th data-i18n="Amount">পরিমাণ</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="businessPaymentTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-delivery">
+                <div class="panel-header"><h2 data-i18n="Delivery">ডেলিভারি</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('delivery')"><i class="fas fa-plus"></i> <span data-i18n="New Delivery">নতুন ডেলিভারি</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th data-i18n="Order">অর্ডার</th><th data-i18n="Address">ঠিকানা</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="deliveryTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-customers">
+                <div class="panel-header"><h2 data-i18n="Customers">গ্রাহক</h2></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Name">নাম</th><th data-i18n="Email">ইমেইল</th><th data-i18n="Orders">অর্ডার</th><th data-i18n="Joined">যোগদান</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="customerTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-sales-analytics">
+                <div class="panel-header"><h2 data-i18n="Sales Analytics">বিক্রয় বিশ্লেষণ</h2></div>
+                <div class="grid-2">
+                    <div class="card"><div class="card-title" data-i18n="Revenue Trend">রাজস্ব প্রবণতা</div><div style="height:120px;display:flex;align-items:flex-end;gap:8px;padding:10px 0;"><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:60px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Jan</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:90px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Feb</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:70px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Mar</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:110px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Apr</span></div></div></div>
+                    <div class="card"><div class="card-title" data-i18n="Top Categories">শীর্ষ ক্যাটাগরি</div><div class="list-item"><span>Electronics</span><span>42%</span></div><div class="list-item"><span>Clothing</span><span>28%</span></div><div class="list-item"><span>Books</span><span>18%</span></div><div class="list-item"><span>Others</span><span>12%</span></div></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-business-notifications">
+                <div class="panel-header"><h2 data-i18n="Notifications">বিজ্ঞপ্তি</h2></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Time">সময়</th><th data-i18n="Message">বার্তা</th><th data-i18n="Type">ধরন</th></tr></thead><tbody id="businessNotificationTableBody"></tbody></table></div></div>
+            </div>
+
+            <!-- ======================== ADMIN PANELS ======================== -->
+            <div class="panel" id="panel-admin-dashboard">
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-users"></i></div><div class="stat-label" data-i18n="Total Users">মোট ব্যবহারকারী</div><div class="stat-value" id="adminTotalUsers">0</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 4.2%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-store"></i></div><div class="stat-label" data-i18n="Businesses">ব্যবসা</div><div class="stat-value">1,240</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 2.5%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div><div class="stat-label" data-i18n="Complaints">অভিযোগ</div><div class="stat-value">856</div><div class="stat-change down"><i class="fas fa-arrow-down"></i> 8%</div></div>
+                    <div class="stat-card"><div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div><div class="stat-label" data-i18n="Revenue">রাজস্ব</div><div class="stat-value">৳5.2M</div><div class="stat-change up"><i class="fas fa-arrow-up"></i> 12%</div></div>
+                </div>
+                <div class="grid-2">
+                    <div class="card"><div class="card-title" data-i18n="Recent Complaints">সাম্প্রতিক অভিযোগ</div><div id="adminRecentComplaints"></div></div>
+                    <div class="card"><div class="card-title" data-i18n="Service Usage">সেবা ব্যবহার</div><div class="list-item"><span data-i18n="Healthcare">স্বাস্থ্যসেবা</span><span>42%</span></div><div class="list-item"><span data-i18n="Transport">পরিবহন</span><span>28%</span></div><div class="list-item"><span data-i18n="E-Commerce">ই-কমার্স</span><span>18%</span></div><div class="list-item"><span data-i18n="Other">অন্যান্য</span><span>12%</span></div></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-users">
+                <div class="panel-header"><h2 data-i18n="User Management">ব্যবহারকারী ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('user')"><i class="fas fa-plus"></i> <span data-i18n="Add User">ব্যবহারকারী যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="User">ব্যবহারকারী</th><th data-i18n="Email">ইমেইল</th><th data-i18n="Password">পাসওয়ার্ড</th><th data-i18n="Role">ভূমিকা</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="userTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-businesses">
+                <div class="panel-header"><h2 data-i18n="Business Management">ব্যবসা ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('business')"><i class="fas fa-plus"></i> <span data-i18n="Add Business">ব্যবসা যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Business Name">ব্যবসার নাম</th><th data-i18n="Owner">মালিক</th><th data-i18n="Type">ধরন</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminBusinessTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-healthcare">
+                <div class="panel-header"><h2 data-i18n="Healthcare Management">স্বাস্থ্যসেবা ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('healthcare')"><i class="fas fa-plus"></i> <span data-i18n="Add Hospital">হাসপাতাল যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Hospital">হাসপাতাল</th><th data-i18n="Doctor">ডাক্তার</th><th data-i18n="Speciality">বিশেষত্ব</th><th data-i18n="Available">উপলব্ধ</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminHealthcareTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-education">
+                <div class="panel-header"><h2 data-i18n="Education Management">শিক্ষা ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('education')"><i class="fas fa-plus"></i> <span data-i18n="Add Institution">প্রতিষ্ঠান যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Institution">প্রতিষ্ঠান</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Courses">কোর্স</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminEducationTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-transport">
+                <div class="panel-header"><h2 data-i18n="Transport Management">পরিবহন ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('transport')"><i class="fas fa-plus"></i> <span data-i18n="Add Route">রুট যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Route">রুট</th><th data-i18n="Type">ধরন</th><th data-i18n="Departure">প্রস্থান</th><th data-i18n="Arrival">আগমন</th><th data-i18n="Fare">ভাড়া</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminTransportTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-property">
+                <div class="panel-header"><h2 data-i18n="Property Management">সম্পত্তি ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('realestate')"><i class="fas fa-plus"></i> <span data-i18n="Add Property">সম্পত্তি যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Property">সম্পত্তি</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Price">মূল্য</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminPropertyTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-ecommerce">
+                <div class="panel-header"><h2 data-i18n="E-Commerce Management">ই-কমার্স ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('ecommerce')"><i class="fas fa-plus"></i> <span data-i18n="Add Product">পণ্য যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Product">পণ্য</th><th data-i18n="Category">ক্যাটাগরি</th><th data-i18n="Price">মূল্য</th><th data-i18n="Stock">স্টক</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminEcommerceTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-courier">
+                <div class="panel-header"><h2 data-i18n="Courier Management">কুরিয়ার ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('courier')"><i class="fas fa-plus"></i> <span data-i18n="Add Parcel">পার্সেল যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Parcel ID">পার্সেল আইডি</th><th data-i18n="Sender">প্রেরক</th><th data-i18n="Receiver">প্রাপক</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminCourierTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-payments">
+                <div class="panel-header"><h2 data-i18n="Payment Management">পেমেন্ট ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('payment')"><i class="fas fa-plus"></i> <span data-i18n="Add Payment">পেমেন্ট যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Bill #">বিল নং</th><th data-i18n="Type">ধরন</th><th data-i18n="Amount">পরিমাণ</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminPaymentTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-parking">
+                <div class="panel-header"><h2 data-i18n="Parking Management">পার্কিং ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('parking')"><i class="fas fa-plus"></i> <span data-i18n="Add Slot">স্লট যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Location">অবস্থান</th><th data-i18n="Slot">স্লট</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Fee">ফি</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminParkingTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-emergency">
+                <div class="panel-header"><h2 data-i18n="Emergency Management">জরুরি ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-danger" onclick="openModal('emergency')"><i class="fas fa-plus"></i> <span data-i18n="Add Emergency">জরুরি যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Emergency #">জরুরি নং</th><th data-i18n="Type">ধরন</th><th data-i18n="Location">অবস্থান</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminEmergencyTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-complaints">
+                <div class="panel-header"><h2 data-i18n="Complaint Management">অভিযোগ ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('complaint')"><i class="fas fa-plus"></i> <span data-i18n="Add Complaint">অভিযোগ যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th>#</th><th data-i18n="Type">ধরন</th><th data-i18n="Description">বিবরণ</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminComplaintTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-booking">
+                <div class="panel-header"><h2 data-i18n="Booking Management">বুকিং ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('booking')"><i class="fas fa-plus"></i> <span data-i18n="Add Booking">বুকিং যোগ করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Booking #">বুকিং নং</th><th data-i18n="Service">সেবা</th><th data-i18n="Date">তারিখ</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminBookingTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-analytics">
+                <div class="panel-header"><h2 data-i18n="Analytics">বিশ্লেষণ</h2></div>
+                <div class="grid-2">
+                    <div class="card"><div class="card-title" data-i18n="User Growth">ব্যবহারকারী বৃদ্ধি</div><div style="height:120px;display:flex;align-items:flex-end;gap:8px;padding:10px 0;"><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:40px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Jan</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:65px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Feb</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:90px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Mar</span></div><div style="flex:1;display:flex;flex-direction:column;align-items:center;"><div style="width:100%;background:var(--accent);height:115px;border-radius:6px 6px 0 0;"></div><span style="font-size:11px;color:var(--text-muted);">Apr</span></div></div></div>
+                    <div class="card"><div class="card-title" data-i18n="Complaint Statistics">অভিযোগ পরিসংখ্যান</div><div class="list-item"><span data-i18n="Submitted">জমা দেওয়া</span><span>32%</span></div><div class="list-item"><span data-i18n="Under Review">পর্যালোচনায়</span><span>28%</span></div><div class="list-item"><span data-i18n="Resolved">সমাধান</span><span>40%</span></div></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-admin-notifications">
+                <div class="panel-header"><h2 data-i18n="Notifications">বিজ্ঞপ্তি</h2></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Time">সময়</th><th data-i18n="Message">বার্তা</th><th data-i18n="Type">ধরন</th></tr></thead><tbody id="adminNotificationTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-admin-chat">
+                <div class="panel-header"><h2 data-i18n="Chat Management">চ্যাট ব্যবস্থাপনা</h2></div>
+                <div class="card" style="max-width:600px;">
+                    <div class="list-item"><span><i class="fas fa-user-circle" style="font-size:24px;"></i> Citizen A</span><span class="badge-status active">Online</span></div>
+                    <div class="list-item"><span><i class="fas fa-user-circle" style="font-size:24px;"></i> Business B</span><span class="badge-status inactive">Offline</span></div>
+                </div>
+            </div>
+
+            <div class="panel" id="panel-admin-documents">
+                <div class="panel-header"><h2 data-i18n="Document Management">নথি ব্যবস্থাপনা</h2><div class="panel-actions"><button class="btn btn-primary" onclick="openModal('document')"><i class="fas fa-plus"></i> <span data-i18n="Upload Document">নথি আপলোড করুন</span></button></div></div>
+                <div class="table-wrap"><div class="table-scroll"><table><thead><tr><th data-i18n="Document">নথি</th><th data-i18n="Type">ধরন</th><th data-i18n="Uploaded">আপলোড</th><th data-i18n="Status">অবস্থা</th><th data-i18n="Actions">অ্যাকশন</th></tr></thead><tbody id="adminDocumentTableBody"></tbody></table></div></div>
+            </div>
+
+            <div class="panel" id="panel-settings">
+                <div class="panel-header"><h2 data-i18n="System Settings">সিস্টেম সেটিংস</h2></div>
+                <div class="card" style="max-width:600px;">
+                    <div class="form-group"><label data-i18n="City Name">শহরের নাম</label><input type="text" value="Smart City" /></div>
+                    <div class="form-group"><label data-i18n="Timezone">টাইমজোন</label><select><option>UTC +0</option><option selected>UTC +6</option></select></div>
+                    <div class="form-group"><label data-i18n="Currency">মুদ্রা</label><select><option>USD ($)</option><option selected>BDT (৳)</option></select></div>
+                    <button class="btn btn-primary" onclick="alert(t('Settings saved!'))"><span data-i18n="Save Settings">সেটিংস সংরক্ষণ করুন</span></button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ─── MODAL ─── -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Add New</h3>
+                <button class="modal-close" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modalBody">
+                <div class="form-group"><label id="modalLabel1">Field 1</label><input type="text" id="modalField1" /></div>
+                <div class="form-group"><label id="modalLabel2">Field 2</label><input type="text" id="modalField2" /></div>
+                <div class="form-row">
+                    <div class="form-group"><label id="modalLabel3">Status</label><select id="modalField3"><option value="active">Pay</option><option value="inactive">No Pay</option></select></div>
+                    <div class="form-group"><select id="modalField4"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+                </div>
+                <div class="form-group" id="modalPasswordGroup" style="display:none;">
+                    <label id="modalLabel5">Password</label>
+                    <input type="text" id="modalField5" />
+                </div>
+                <button class="btn btn-primary" onclick="saveModal()" style="width:100%;justify-content:center;"><i class="fas fa-save"></i> <span data-i18n="Save">সংরক্ষণ করুন</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
