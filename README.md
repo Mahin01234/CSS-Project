@@ -136,8 +136,7 @@ Language toggle (Bengali/English) and dark/light mode support
 | Business Dashboard | Admin Dashboard |
 |--------------------|-----------------|
 | <img width="1486" alt="Screenshot 2026-09-02 150929" src="https://github.com/user-attachments/assets/9f93e8c5-00b4-4016-a63a-7b96ab95b7c9" /> | <img width="1482" alt="Screenshot 2026-09-02 150948" src="https://github.com/user-attachments/assets/ac60c16c-e739-4e47-b818-6b6639b01825" /> |
-| <img width="1482" alt="Screenshot 2026-09-02 150848" src="https://github.com/user-attachments/assets/2f29606b-f4f0-487f-8de2-9f9075432709" /> | *(Admin Dashboard already shown above)* |
-
+| <img width="1482" alt="Screenshot 2026-09-02 150848" src="https://github.com/user-attachments/assets/2f29606b-f4f0-487f-8de2-9f9075432709" /> | 
 
 ---
 
